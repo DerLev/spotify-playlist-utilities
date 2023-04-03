@@ -1,0 +1,8 @@
+# server dirs
+server/
+lib/
+
+# build dirs
+build-server/
+dist/
+dist-server/

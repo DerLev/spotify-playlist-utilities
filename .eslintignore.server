@@ -1,0 +1,10 @@
+# client app dirs
+src/
+public/
+components/
+assets/
+
+# build dirs
+build-server/
+dist/
+dist-server/

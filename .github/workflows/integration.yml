@@ -24,7 +24,11 @@ jobs:
           cache: "yarn"
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+      - name: Lint Client
+        run: yarn client:esl
       - name: Type Check Client
         run: yarn client:tsc
+      - name: Lint Server
+        run: yarn server:esl
       - name: Type Check Server
         run: yarn server:tsc
