@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  app:
+    image: ghcr.io/derlev/spotify-playlist-utilities:latest
+    container_name: spotify_playlist_utilities
+    ports:
+      - 5000:5000/tcp
