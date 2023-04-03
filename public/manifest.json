@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "Spotify Playlist Utilities",
+  "short_name": "Spotify Playlist Utilities",
+  "dir": "auto",
+  "lang": "en",
+  "start_url": "/",
+  "display": "browser",
+  "orientation": "any",
+  "scope": "/",
+  "id": "/",
+  "icons": [
+    {
+      "purpose": "any",
+      "type": "image/png",
+      "sizes": "192x192",
+      "src": "/icons/pwa-192x192.png"
+    },
+    {
+      "purpose": "any monochrome",
+      "type": "image/png",
+      "sizes": "192x192",
+      "src": "/icons/pwa-192x192-mono.png"
+    },
+    {
+      "purpose": "any",
+      "type": "image/png",
+      "sizes": "512x512",
+      "src": "/icons/pwa-512x512.png"
+    },
+    {
+      "purpose": "any monochrome",
+      "type": "image/png",
+      "sizes": "512x512",
+      "src": "/icons/pwa-512x512-mono.png"
+    }
+  ],
+  "theme_color": "#1ed760",
+  "background_color": "#141517"
+}

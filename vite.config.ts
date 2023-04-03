@@ -10,9 +10,6 @@ export default defineConfig({
     tsconfigPaths(),
     eslint()
   ],
-  build: {
-    manifest: true,
-  },
   server: {
     proxy: {
       '/api': {

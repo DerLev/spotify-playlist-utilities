@@ -4,6 +4,7 @@ import { returnAbsolutePath } from '../lib/returnPath'
 import yargs from 'yargs'
 
 const app = express()
+app.disable('x-powered-by')
 
 interface Args {
   [key: string]: any
@@ -21,9 +22,14 @@ app.all("/api/*", (_req, res) => {
 })
 
 if(development === false) {
-  app.use("/", express.static(returnAbsolutePath("../dist")))
+  app.use("/", express.static(returnAbsolutePath("../dist"), {
+    setHeaders(res) {
+      res.header('X-Robots-Tag', 'noindex')
+    },
+  }))
   
   app.get("/*", (_req, res) => {
+    res.header('X-Robots-Tag', 'noindex')
     res.sendFile(returnAbsolutePath("../dist/index.html"))
   })
 } else {
