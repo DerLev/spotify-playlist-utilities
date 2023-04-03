@@ -15,3 +15,22 @@ https://soundiiz.com/tutorial/spotify-to-youtube 😉
 ### Roadmap for the project
 
 [![Open](https://derlev.github.io/svg-tags/derlev%20open.svg)](https://derlev.notion.site/f431507fdd2a41be87bb9a5119a4e653?v=73f6fe0992c549dfbd592e4d1b691dc6)
+
+### Docker container
+
+The Docker container for this project is available at 
+`ghcr.io/derlev/spotify-playlist-utilities`
+
+#### Usage
+
+**Environment vars:**
+
+| Variable | Description                              | Default |
+|----------|------------------------------------------|---------|
+| `PORT`   | Specifies the port the webserver runs on | 5000    |
+
+#### Tags
+
+| Tag      | Version of app        |
+|----------|-----------------------|
+| `latest` | Latest stable release |
