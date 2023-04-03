@@ -3,6 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DerLev/spotify-playlist-utilities.git"
+  },
+  "author": {
+    "name": "DerLev",
+    "email": "levin.schroeren@gmail.com",
+    "url": "https://github.com/DerLev"
+  },
   "scripts": {
     "dev:client": "vite",
     "dev:server": "concurrently -k -c blue,magenta,green -n tsc,esl,nm -i --default-input-target 2 yarn:server:tsc:watch yarn:server:esl:watch yarn:server:nodemon",
