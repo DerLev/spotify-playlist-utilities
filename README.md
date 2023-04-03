@@ -1,5 +1,7 @@
 # spotify-playlist-utilities
 
+[![CI](https://github.com/DerLev/spotify-playlist-utilities/actions/workflows/integration.yml/badge.svg?branch=main&event=push)](https://github.com/DerLev/spotify-playlist-utilities/actions/workflows/integration.yml)
+
 > **Note**  
 > This project is currently under development
 

@@ -26,5 +26,5 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Type Check Client
         run: yarn client:tsc
-      - name: Type Check Action
+      - name: Type Check Server
         run: yarn server:tsc
