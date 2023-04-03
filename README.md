@@ -56,3 +56,35 @@ docker compose up
 | `latest`         | Latest stable release             |
 | `main`           | Latest release from `main` branch |
 | short commit sha | Release from specific commit      |
+
+## Folder structure
+
+Below is the folder structure of which part of the app uses files and folders 
+the other part does not
+
+### Client
+
+```
+spotify-playlist-utilities/
+├─ assets/
+├─ components/
+├─ public/
+├─ src/
+├─ .eslintignore
+├─ .eslintrc.json
+├─ index.html
+├─ tsconfig.json
+├─ vite.config.ts
+```
+
+### Server
+
+```
+spotify-playlist-utilities/
+├─ lib/
+├─ server/
+├─ .eslintignore.server
+├─ .eslintrc.server.json
+├─ tsconfig.server.json
+├─ webpack.config.js
+```
