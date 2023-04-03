@@ -19,7 +19,7 @@
     "build:client": "tsc && vite build",
     "build:server": "webpack",
     "start:server": "node dist-server/server.js",
-    "server:nodemon": "nodemon -x \"node --experimental-specifier-resolution=node\"  --watch build-server build-server/server/server.js --dev=true",
+    "server:nodemon": "nodemon -x \"node --experimental-specifier-resolution=node --no-warnings\"  --watch build-server build-server/server/server.js --dev=true",
     "server:tsc": "tsc --project tsconfig.server.json --noEmit",
     "server:tsc:watch": "tsc --project tsconfig.server.json -w",
     "server:esl": "eslint . --ext .ts --config .eslintrc.server.json --ignore-path .eslintignore.server",
@@ -43,6 +43,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.10.0",
+    "redis-om": "^0.3.6",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
@@ -58,6 +59,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-watch": "^8.0.0",
     "nodemon": "^2.0.22",
+    "terser-webpack-plugin": "^5.3.7",
     "ts-loader": "^9.4.2",
     "tsc": "^2.0.4",
     "typescript": "^4.9.3",

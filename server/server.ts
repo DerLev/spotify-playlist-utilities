@@ -3,9 +3,20 @@ import { green, lightGreen, gray, lightGray, lightCyan, bold, red, lightYellow, 
 import { returnAbsolutePath } from '../lib/returnPath'
 import yargs from 'yargs'
 import { config as loadenv } from 'dotenv'
+import { Client } from 'redis-om'
+import { playlistSchema } from '../lib/redis'
 
 const cwd = process.cwd()
 loadenv({ path: cwd + '/.env' })
+
+const redisClient = new Client()
+
+const connect = async () => {
+  if(!redisClient.isOpen()) {
+    if(!process.env.REDIS_URL) throw new Error('Redis URL not specified')
+    await redisClient.open(process.env.REDIS_URL)
+  }
+}
 
 const app = express()
 app.disable('x-powered-by')
@@ -17,8 +28,16 @@ interface Args {
 const args = yargs(process.argv.slice(2)).argv as Args
 const development = args['dev'] === 'true' ? true : false
 
-app.get("/api/hello", (_req, res) => {
-  res.status(200).json({ code: 200, message: process.env.HELLO_MESSAGE })
+app.get("/api/hello", async (_req, res) => {
+  try {
+    const playlistRepositry = redisClient.fetchRepository(playlistSchema)
+    const output = await playlistRepositry.search().return.all()
+
+    res.status(200).json([ ...output ])
+  } catch(err) {
+    res.status(500).json({ code: 500, message: 'Internal Server Error' })
+    console.error(err)
+  }
 })
 
 app.all("/api/*", (_req, res) => {
@@ -43,7 +62,7 @@ if(development === false) {
 }
 
 const { PORT = 5000 } = process.env
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log()
   console.log(green(`  ➜ `), gray(`Server running on port`), lightGray(`${PORT}`))
   console.log(lightGreen(`  ➜ `), lightGray(`Local:`), lightCyan(`http://localhost:${bold(PORT)}/`))
@@ -54,6 +73,14 @@ app.listen(PORT, () => {
   )
 
   console.log()
+
+  try {
+    await connect()
+    console.log(lightGreen(`  ➜ `), lightGray(`Connected to Redis server`))
+    console.log()
+  } catch(err) {
+    console.error(err)
+  }
 })
 
 // Shutdown handling for Docker and Nodemon

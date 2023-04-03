@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import TerserPlugin from 'terser-webpack-plugin'
 
 const returnAbsolutePath = (path) => {
   const url = new URL(path, import.meta.url).toString()
@@ -49,4 +50,15 @@ export default {
     }),
     new webpack.optimize.ModuleConcatenationPlugin()
   ],
+  optimization: {
+    nodeEnv: 'production',
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          keep_classnames: true
+        }
+      })
+    ]
+  }
 }
