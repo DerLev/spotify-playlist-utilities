@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "outDir": "build-server",
+    "allowJs": true,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "module": "ES2020",
+    "paths": {
+      "@lib/*": [ "lib/*" ]
+    }
+  },
+  "include": ["server/*", "lib/*"]
+}
