@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  lint-and-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, 'wip:') }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Nodejs environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+      - name: Type Check Client
+        run: yarn client:tsc
+      - name: Type Check Action
+        run: yarn server:tsc

@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev:client": "vite",
-    "dev:server": "concurrently -k -c blue,green -n tsc,nm -i --default-input-target 1 yarn:server:tsc yarn:server:nodemon",
+    "dev:server": "concurrently -k -c blue,green -n tsc,nm -i --default-input-target 1 yarn:server:tsc:watch yarn:server:nodemon",
     "build:client": "tsc && vite build",
     "build:server": "webpack",
     "start:server": "node dist-server/server.js",
     "server:nodemon": "nodemon -x \"node --experimental-specifier-resolution=node\"  --watch build-server build-server/server/server.js --dev=true",
-    "server:tsc": "tsc --project tsconfig.server.json -w"
+    "server:tsc:watch": "tsc --project tsconfig.server.json -w",
+    "server:tsc": "tsc --project tsconfig.server.json --noEmit",
+    "client:tsc": "tsc"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
