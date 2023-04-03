@@ -26,3 +26,4 @@ build-server
 *.sw?
 
 .env*
+!.env.example

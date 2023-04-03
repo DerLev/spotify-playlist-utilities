@@ -2,6 +2,10 @@ import express from 'express'
 import { green, lightGreen, gray, lightGray, lightCyan, bold, red, lightYellow, yellow } from 'kolorist'
 import { returnAbsolutePath } from '../lib/returnPath'
 import yargs from 'yargs'
+import { config as loadenv } from 'dotenv'
+
+const cwd = process.cwd()
+loadenv({ path: cwd + '/.env' })
 
 const app = express()
 app.disable('x-powered-by')
@@ -14,7 +18,7 @@ const args = yargs(process.argv.slice(2)).argv as Args
 const development = args['dev'] === 'true' ? true : false
 
 app.get("/api/hello", (_req, res) => {
-  res.status(200).json({ hello: 'Hello World!' })
+  res.status(200).json({ code: 200, message: process.env.HELLO_MESSAGE })
 })
 
 app.all("/api/*", (_req, res) => {

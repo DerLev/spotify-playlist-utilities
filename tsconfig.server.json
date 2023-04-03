@@ -13,5 +13,5 @@
       "@lib/*": [ "lib/*" ]
     }
   },
-  "include": ["server/*", "lib/*"]
+  "include": ["server/*", "lib/*", "types/*"]
 }
