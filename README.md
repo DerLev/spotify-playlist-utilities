@@ -31,6 +31,8 @@ The Docker container for this project is available at
 
 #### Tags
 
-| Tag      | Version of app        |
-|----------|-----------------------|
-| `latest` | Latest stable release |
+| Tag              | Version of app                    |
+|------------------|-----------------------------------|
+| `latest`         | Latest stable release             |
+| `main`           | Latest release from `main` branch |
+| short commit sha | Release from specific commit      |
