@@ -4,12 +4,17 @@ import { returnAbsolutePath } from '../lib/returnPath'
 import yargs from 'yargs'
 import { config as loadenv } from 'dotenv'
 import { Client } from 'redis-om'
-import { playlistSchema } from '../lib/redis'
+import { playlistSchema, createAllIndices } from '../lib/redis'
 import { readFileSync } from 'fs'
 import YAML from 'yaml'
 import { Config, configSchema } from '../lib/validations'
 
 const cwd = process.cwd()
+
+const app = express()
+app.disable('x-powered-by')
+
+const redisClient = new Client()
 
 // first write env from config.yml
 let config = {} as Config
@@ -32,8 +37,11 @@ try {
 // then write env from .env
 loadenv({ path: cwd + '/.env' })
 
-const redisClient = new Client()
+const packageJson = JSON.parse(readFileSync(cwd + '/package.json', { encoding: 'utf-8' }))
 
+/**
+ * Connect to the Redis server
+ */
 const connect = async () => {
   if(!redisClient.isOpen()) {
     if(!process.env.REDIS_URL) throw new Error('Redis URL not specified')
@@ -41,8 +49,36 @@ const connect = async () => {
   }
 }
 
-const app = express()
-app.disable('x-powered-by')
+// function needs a better name
+/**
+ * Store db version in redis and execute index creation if lower
+ * @returns Boolean of whether action was run
+ */
+const storeAppVersion = async (currentVersion: string) => {
+  const versionKey = 'dbversion'
+
+  const keyCreated = await redisClient.execute([ 'SETNX', versionKey, currentVersion ]) as number
+  if(keyCreated > 0) {
+    await createAllIndices(redisClient)
+    return true
+  }
+
+  const getKey = await redisClient.execute([ 'GET', versionKey ]) as string
+  const currentVersionArray = currentVersion.split('.')
+  const keyVersion = getKey.split('.')
+  let storeNewVersion = false
+  for (let i = 0; i < keyVersion.length; i++) {
+    if(Number(keyVersion[i]) < Number(currentVersionArray[i])) {
+      storeNewVersion = true
+      await createAllIndices(redisClient)
+      break
+    }
+  }
+
+  if(storeNewVersion) await redisClient.execute([ 'SET', versionKey, currentVersion ])
+
+  return false
+}
 
 interface Args {
   [key: string]: any
@@ -51,6 +87,8 @@ interface Args {
 const args = yargs(process.argv.slice(2)).argv as Args
 const development = args['dev'] === 'true' ? true : false
 
+// this is just for testing
+// will be removed once api routes are added
 app.get("/api/hello", async (_req, res) => {
   try {
     const playlistRepositry = redisClient.fetchRepository(playlistSchema)
@@ -63,10 +101,12 @@ app.get("/api/hello", async (_req, res) => {
   }
 })
 
+// 404 for api routes
 app.all("/api/*", (_req, res) => {
   res.status(400).json({ code: 404, message: 'endpoint not found' })
 })
 
+// serving client
 if(development === false) {
   app.use("/", express.static(returnAbsolutePath("../dist"), {
     setHeaders(res) {
@@ -100,6 +140,15 @@ app.listen(PORT, async () => {
   try {
     await connect()
     console.log(lightGreen(`  ➜ `), lightGray(`Connected to Redis server`))
+    
+    // always create new index when env var is set and in dev mode
+    const rebuildIndex = process.env.NEW_INDEX && development ? true : false
+    if(rebuildIndex) {
+      await createAllIndices(redisClient)
+    } else {
+      await storeAppVersion(packageJson.version)
+    }
+
     console.log()
   } catch(err) {
     console.error(err)

@@ -1,4 +1,5 @@
-import { Entity, Schema } from 'redis-om'
+import { lightGray, lightGreen } from 'kolorist'
+import { Client, Entity, Schema } from 'redis-om'
 
 interface Playlist {
   id: string
@@ -14,3 +15,25 @@ export const playlistSchema = new Schema(
   },
   { dataStructure: 'JSON' }
 )
+
+/**
+ * Create all search indices for all Repositories
+ * @param client Redis client object with active server connection
+ * @returns True if operation successful
+ */
+export const createAllIndices = async (client: Client) => {
+  if(client.isOpen() !== true) return false
+  console.log(lightGreen(`  ➜ `), lightGray(`Creating search indices...`))
+
+  // fetch all repos
+  const playlistRepositry = client.fetchRepository(playlistSchema)
+
+  try {
+    // create all search indices
+    await playlistRepositry.createIndex()
+  } catch(err) {
+    return err
+  }
+
+  return true
+}
