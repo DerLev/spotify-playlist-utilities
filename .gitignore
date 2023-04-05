@@ -27,3 +27,4 @@ build-server
 
 .env*
 !.env.example
+config.yml

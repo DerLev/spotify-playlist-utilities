@@ -5,8 +5,31 @@ import yargs from 'yargs'
 import { config as loadenv } from 'dotenv'
 import { Client } from 'redis-om'
 import { playlistSchema } from '../lib/redis'
+import { readFileSync } from 'fs'
+import YAML from 'yaml'
+import { Config, configSchema } from '../lib/validations'
 
 const cwd = process.cwd()
+
+// first write env from config.yml
+let config = {} as Config
+try {
+  const configFile = readFileSync(cwd + '/config.yml', { encoding: 'utf-8' })
+  const { value, error } = configSchema.validate(YAML.parse(configFile))
+  if(error) {
+    console.log(red(`  ➜  Error loading config file: ${error.details[0].message}`))
+  } else {
+    config = value
+
+    const redisUrl = `redis://${config.redis.user}:${config.redis.password}@${config.redis.host}`
+    if(!process.env.REDIS_URL) process.env['REDIS_URL'] = redisUrl
+  }
+} catch(err) {
+  console.error(red(`  ➜  Error loading config file. Does it exists?`))
+  process.exit(1)
+}
+
+// then write env from .env
 loadenv({ path: cwd + '/.env' })
 
 const redisClient = new Client()

@@ -1,0 +1,4 @@
+redis:
+  host: ip:port of redis server
+  user: redis username
+  password: redis password
