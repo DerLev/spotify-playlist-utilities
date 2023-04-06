@@ -14,6 +14,8 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.event.head_commit.message, 'wip:') }}
+    permissions:
+      checks: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -25,10 +27,23 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
       - name: Lint Client
-        run: yarn client:esl
+        run: yarn client:esl --output-file eslint_report.client.json --format json
+        continue-on-error: true
       - name: Type Check Client
-        run: yarn client:tsc
+        run: yarn client:tsc > typescript.client.log
+        continue-on-error: true
       - name: Lint Server
-        run: yarn server:esl
+        run: yarn server:esl --output-file eslint_report.server.json --format json
+        continue-on-error: true
       - name: Type Check Server
-        run: yarn server:tsc
+        run: yarn server:tsc > typescript.server.log
+        continue-on-error: true
+      - name: Annotate Code
+        uses: DerLev/eslint-annotations@v1
+        with:
+          eslint-report: eslint_report.client.json eslint_report.server.json
+          typescript-log: typescript.client.log typescript.server.log
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          error-on-warn: true
+          status-check-name: Annotations
+          fail-in-pr: false
