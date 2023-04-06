@@ -7,8 +7,6 @@ import Root from './routes/root'
 import ErrorPage from './routes/error-page'
 import Index from './routes/index'
 
-const willWarn = 'testing'
-
 const router = createBrowserRouter([
   { 
     path: '/',
