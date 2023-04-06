@@ -9,6 +9,8 @@ import { readFileSync } from 'fs'
 import YAML from 'yaml'
 import { Config, configSchema } from '../lib/validations'
 
+const willError: number = 'testing'
+
 const cwd = process.cwd()
 
 const app = express()
